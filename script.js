@@ -5,7 +5,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const columnWidth = 20;       // fixed horizontal grid spacing
-const maxColumns = 30;        // max number of columns you want to show
+const maxColumns = 50;        // max number of columns you want to show
 
 const totalColumns = Math.floor(canvas.width / columnWidth);
 const columnsToDraw = Math.min(maxColumns, totalColumns);
