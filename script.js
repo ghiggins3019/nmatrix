@@ -1,59 +1,74 @@
 const canvas = document.getElementById('matrixCanvas');
 const ctx = canvas.getContext('2d');
 
-// Set canvas dimensions
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const columns = Math.floor(canvas.width / 20); // Number of columns
-const matrix = 'abcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()*&^%+-/~{[|`]}'; // Characters to be displayed
+const columns = Math.floor(canvas.width / 20);
+const charSet = 'abcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()*&^%+-/~{[|`]}';
 
-// Create an array of column positions
-const columnPositions = Array(columns).fill(0);
+// Each column holds an array of 15 characters (initially empty)
+const columnData = Array(columns).fill().map(() => ({
+  yPositions: Array(15).fill(-20), // Start off-canvas above
+  chars: Array(15).fill(' '),
+}));
 
-// Flag to know if it's the first frame
-let firstFrame = true;
+const lineLength = 15;
+const charHeight = 20; // vertical spacing
 
-// Function to draw the matrix effect
+// Function to generate a random character from charSet
+function randomChar() {
+  return charSet[Math.floor(Math.random() * charSet.length)];
+}
+
 function drawMatrix() {
-    if (firstFrame) {
-        // Solid dark gray background for the first frame
-        ctx.fillStyle = '#191919';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        firstFrame = false;
-    } else {
-        // Semi-transparent dark gray overlay for fade effect
-        ctx.fillStyle = 'rgba(25, 25, 25, 0.05)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // Clear entire canvas to solid #191919
+  ctx.fillStyle = '#191919';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.font = '15px monospace';
+
+  columnData.forEach((column, colIndex) => {
+    // Shift characters down by charHeight
+    for (let i = lineLength - 1; i > 0; i--) {
+      column.chars[i] = column.chars[i - 1];
+      column.yPositions[i] = column.yPositions[i - 1];
+    }
+    // New top character starts above visible area (-20)
+    column.chars[0] = randomChar();
+    column.yPositions[0] = column.yPositions[1] !== undefined ? column.yPositions[1] - charHeight : -charHeight;
+
+    // Move all y positions down by 1 pixel per frame to animate smooth fall
+    for (let i = 0; i < lineLength; i++) {
+      column.yPositions[i] += 1;
     }
 
-    // Set the text color to green
-    ctx.fillStyle = '#6ac954';
-    ctx.font = '15px monospace';
+    // Draw each character with fading alpha from fully opaque (top) to nearly invisible (bottom)
+    for (let i = 0; i < lineLength; i++) {
+      const alpha = 1 - i / (lineLength - 1); // 1 down to 0
+      // Multiply alpha by a max opacity factor so last char is very transparent but visible
+      const maxAlpha = 0.8;
+      ctx.fillStyle = `rgba(106, 201, 84, ${alpha * maxAlpha})`; // green with fading alpha
 
-    // Iterate over each column
-    columnPositions.forEach((position, index) => {
-        // Generate a random character
-        const char = matrix[Math.floor(Math.random() * matrix.length)];
+      const x = colIndex * 20;
+      const y = column.yPositions[i];
 
-        // Display the character at the current position
-        ctx.fillText(char, index * 20, position);
+      // Only draw characters inside canvas bounds
+      if (y > 0 && y < canvas.height + charHeight) {
+        ctx.fillText(column.chars[i], x, y);
+      }
+    }
 
-        // Move the position down
-        columnPositions[index] += 20;
-
-        // Reset the position if it exceeds the canvas height
-        if (columnPositions[index] > canvas.height && Math.random() > 0.975) {
-            columnPositions[index] = 0;
-        }
-    });
+    // Reset column when bottom character goes off the screen
+    if (column.yPositions[lineLength - 1] > canvas.height + charHeight) {
+      column.yPositions.fill(-charHeight * lineLength);
+    }
+  });
 }
 
-// Function to continuously update and render the animation
 function animate() {
-    drawMatrix();
-    setTimeout(animate, 70); // Adjust the delay (in milliseconds) for desired speed
+  drawMatrix();
+  requestAnimationFrame(animate);
 }
 
-// Start the animation
 animate();
