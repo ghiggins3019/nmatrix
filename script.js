@@ -9,33 +9,41 @@ const normalGreen = '#6ac954';
 const lightGreen = '#b6ffb0';
 
 const maxColumns = 20;
-const matrix = 'abcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()*&^%+-/~{[|]}';
+const matrix = 'abcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()*&^%+-/~{[|]}' ;
 
 // Column length for normal columns
 const lineLength = 10;
 const charHeight = 20;
 
+const possibleCols = Math.floor(canvas.width / charHeight); // number of "slots" available
+
 function randomChar() {
   return matrix[Math.floor(Math.random() * matrix.length)];
+}
+
+function randomColumnX() {
+  // choose a random slot, then add jitter so not perfectly aligned
+  const slot = Math.floor(Math.random() * possibleCols);
+  const jitter = Math.random() * (charHeight / 2) - (charHeight / 4);
+  return slot * charHeight + jitter;
 }
 
 // Create normal columns
 const normalColumns = Array(maxColumns).fill().map(() => {
   const chars = Array(lineLength).fill().map(() => randomChar());
   return {
-    x: Math.random() * canvas.width,
+    x: randomColumnX(),
     position: Math.random() * canvas.height,
     chars: chars
   };
 });
 
 // Create light columns that follow normal columns
-// Each light column has exactly 1 char and shares x & position with its normal column
 const lightColumns = normalColumns.map(col => {
   return {
     x: col.x,
     position: col.position,
-    chars: [col.chars[0]] // Start with the same leading char
+    chars: [col.chars[0]]
   };
 });
 
@@ -67,16 +75,16 @@ function drawMatrix() {
     if (col.position - (lineLength - 1) * charHeight > canvas.height) {
       col.position = 0;
       col.chars = Array(lineLength).fill().map(() => randomChar());
-      col.x = Math.random() * canvas.width;
+      col.x = randomColumnX(); // pick a totally new random column slot
     }
 
     // Sync the light column with the normal one
     lightColumns[i].x = col.x;
     lightColumns[i].position = col.position;
-    lightColumns[i].chars[0] = col.chars[0]; // always match the current leading char
+    lightColumns[i].chars[0] = col.chars[0];
   });
 
-  // Draw light columns last so they appear on top
+  // Draw light columns
   ctx.fillStyle = lightGreen;
   lightColumns.forEach(col => {
     const y = col.position;
