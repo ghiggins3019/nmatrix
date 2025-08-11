@@ -88,7 +88,7 @@ function drawMatrix() {
 
 function animate() {
   drawMatrix();
-  setTimeout(animate, 70);
+  setTimeout(animate, 100);
 }
 
 animate();
