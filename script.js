@@ -54,7 +54,6 @@ function drawMatrix() {
     for (let j = 0; j < lineLength; j++) {
       const y = col.position - j * charHeight;
       if (y > 0 && y < canvas.height) {
-        // Use lighter green for bottommost character (j == lineLength - 1)
         ctx.fillStyle = (j === lineLength - 1) ? lighterGreen : normalGreen;
         ctx.fillText(col.chars[j], col.x, y);
       }
@@ -69,7 +68,7 @@ function drawMatrix() {
     if (col.position - (lineLength - 1) * charHeight > canvas.height) {
       col.position = 0;
       col.chars = Array(lineLength).fill().map(() => randomChar());
-      // Keep same x for now
+      // Keep same x on reset
     }
   });
 }
