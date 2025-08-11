@@ -52,7 +52,7 @@ function drawMatrix() {
 
   columnData.forEach((col) => {
     for (let j = 0; j < lineLength; j++) {
-      const y = col.position - j * charHeight;
+      const y = col.position + j * charHeight;  // <-- add to move downward
       if (y > 0 && y < canvas.height) {
         ctx.fillStyle = (j === lineLength - 1) ? lighterGreen : normalGreen;
         ctx.fillText(col.chars[j], col.x, y);
@@ -65,10 +65,10 @@ function drawMatrix() {
 
     col.position += charHeight;
 
-    if (col.position - (lineLength - 1) * charHeight > canvas.height) {
+    if (col.position + (lineLength - 1) * charHeight > canvas.height) {  // <-- updated reset check
       col.position = 0;
       col.chars = Array(lineLength).fill().map(() => randomChar());
-      // Keep same x on reset
+      // keep same x position on reset
     }
   });
 }
