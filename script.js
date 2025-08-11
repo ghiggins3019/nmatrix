@@ -42,7 +42,7 @@ function drawMatrix() {
 // Function to continuously update and render the animation
 function animate() {
     drawMatrix();
-    setTimeout(animate, 70); // Adjust the delay (in milliseconds) for desired speed
+    setTimeout(animate, 500); // Adjust the delay (in milliseconds) for desired speed
 }
 
 // Start the animation
