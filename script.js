@@ -4,7 +4,7 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const maxColumns = 30; // limit total columns drawn
+const maxColumns = 15; // limit total columns drawn
 
 const columnWidth = 20; // keep default spacing
 const columns = Math.min(Math.floor(canvas.width / columnWidth), maxColumns);
