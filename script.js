@@ -10,9 +10,8 @@ const matrix = 'abcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()*&^%+-/~{[|]}';
 const lineLength = 15;
 const charHeight = 20;
 
-// Each column data: position of bottom char, chars array, active flag, initial delay
 const columnData = Array(columns).fill().map(() => ({
-  position: Math.random() * canvas.height,  // start at random vertical pos for natural stagger
+  position: Math.random() * canvas.height,  // start staggered
   chars: Array(lineLength).fill().map(() => randomChar()),
 }));
 
@@ -21,7 +20,6 @@ function randomChar() {
 }
 
 function drawMatrix() {
-  // Clear background
   ctx.fillStyle = '#191919';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -29,7 +27,6 @@ function drawMatrix() {
   ctx.fillStyle = '#6ac954';
 
   columnData.forEach((col, i) => {
-    // Draw all 15 chars stacked upwards from col.position
     for (let j = 0; j < lineLength; j++) {
       const y = col.position - j * charHeight;
       if (y > 0 && y < canvas.height) {
@@ -37,11 +34,10 @@ function drawMatrix() {
       }
     }
 
-    // Move the line down by one char height per frame
     col.position += charHeight;
 
-    // Wrap back to top when bottom passes canvas height
-    if (col.position > canvas.height) {
+    // Reset only after the top character is off screen
+    if (col.position - (lineLength - 1) * charHeight > canvas.height) {
       col.position = 0;
       col.chars = Array(lineLength).fill().map(() => randomChar());
     }
