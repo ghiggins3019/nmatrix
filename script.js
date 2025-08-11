@@ -14,7 +14,7 @@ const columnPositions = Array(columns).fill(0);
 // Function to draw the matrix effect
 function drawMatrix() {
     // Set a semi-transparent black background
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillStyle = 'rgba(25, 25, 25, 0.05)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Set the text color to green
