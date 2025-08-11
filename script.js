@@ -7,7 +7,7 @@ canvas.height = window.innerHeight;
 const maxColumns = 20;
 const matrix = 'abcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()*&^%+-/~{[|]}';
 
-const lineLength = 15;
+const lineLength = 10;
 const charHeight = 20;
 
 function randomChar() {
