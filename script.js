@@ -1,53 +1,70 @@
 const canvas = document.getElementById('matrixCanvas');
 const ctx = canvas.getContext('2d');
 
-// Set canvas dimensions
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const columns = Math.floor(canvas.width / 20); // Number of columns
-const matrix = 'abcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()*&^%+-/~{[|]}'; // Characters to be displayed
+const columns = Math.floor(canvas.width / 20);
+const matrix = 'abcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()*&^%+-/~{[|]}';
 
-// Create an array of column positions
-const columnPositions = Array(columns).fill(0);
+const lineLength = 15;   // number of chars per column
+const charHeight = 20;   // vertical spacing
 
-// Function to draw the matrix effect
+// For each column, track:
+// - position: the Y position of the *bottom* of the line (starts off-screen)
+// - active: whether column is currently falling
+// - delayTimer: countdown before the column starts falling (ms)
+const columnData = Array(columns).fill().map(() => ({
+  position: -lineLength * charHeight,
+  active: false,
+  delayTimer: Math.random() * 3000  // random delay up to 3 seconds
+}));
+
+function randomChar() {
+  return matrix[Math.floor(Math.random() * matrix.length)];
+}
+
 function drawMatrix() {
-    // Set a black background
-    ctx.fillStyle = 'rgba(25, 25, 25, 0.05)'; // For fade effect
-    // BUT first clear fully with:
-    ctx.fillStyle = '#191919'; // solid dark gray base
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'rgba(25, 25, 25, 0.05)'; // then fade layer
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // Clear full canvas with solid background
+  ctx.fillStyle = '#191919';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Set the text color to green
-    ctx.fillStyle = '#6ac954';
-    ctx.font = '15px monospace';
+  ctx.fillStyle = '#6ac954';
+  ctx.font = '15px monospace';
 
-    // Iterate over each column
-    columnPositions.forEach((position, index) => {
-        // Generate a random character
-        const char = matrix[Math.floor(Math.random() * matrix.length)];
-
-        // Display the character at the current position
-        ctx.fillText(char, index * 20, position);
-
-        // Move the position down
-        columnPositions[index] += 20;
-
-        // Reset the position if it exceeds the canvas height
-        if (columnPositions[index] > canvas.height && Math.random() > 0.975) {
-            columnPositions[index] = 0;
+  columnData.forEach((col, i) => {
+    if (!col.active) {
+      // Count down delay timer if not active
+      col.delayTimer -= 70;  // matches the animation frame delay (ms)
+      if (col.delayTimer <= 0) {
+        col.active = true;
+        col.position = 0;
+      }
+    } else {
+      // Draw 15 characters stacked *upwards* from current position
+      for (let j = 0; j < lineLength; j++) {
+        const y = col.position - j * charHeight;
+        if (y > 0 && y < canvas.height) {
+          ctx.fillText(randomChar(), i * 20, y);
         }
-    });
+      }
+
+      // Move column down by one character height per frame
+      col.position += charHeight;
+
+      // When the whole column is off screen, deactivate and reset delay timer
+      if (col.position - lineLength * charHeight > canvas.height) {
+        col.active = false;
+        col.delayTimer = 1000 + Math.random() * 3000;  // random delay 1-4 seconds
+        col.position = -lineLength * charHeight;
+      }
+    }
+  });
 }
 
-// Function to continuously update and render the animation
 function animate() {
-    drawMatrix();
-    setTimeout(animate, 70); // Adjust the delay (in milliseconds) for desired speed
+  drawMatrix();
+  setTimeout(animate, 70);
 }
 
-// Start the animation
 animate();
