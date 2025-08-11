@@ -4,17 +4,17 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const maxColumns = 15; // limit total columns drawn
-
-const columnWidth = 20; // keep default spacing
-const columns = Math.min(Math.floor(canvas.width / columnWidth), maxColumns);
+const maxColumns = 20;  // your desired reduced columns count
 
 const matrix = 'abcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()*&^%+-/~{[|]}';
 
 const lineLength = 15;
 const charHeight = 20;
 
-const columnData = Array(columns).fill().map(() => ({
+// Calculate spacing so columns spread evenly across full width
+const spacingX = canvas.width / maxColumns;
+
+const columnData = Array(maxColumns).fill().map(() => ({
   position: Math.random() * canvas.height,
   chars: Array(lineLength).fill().map(() => randomChar()),
 }));
@@ -34,7 +34,7 @@ function drawMatrix() {
     for (let j = 0; j < lineLength; j++) {
       const y = col.position - j * charHeight;
       if (y > 0 && y < canvas.height) {
-        ctx.fillText(col.chars[j], i * columnWidth, y);
+        ctx.fillText(col.chars[j], i * spacingX, y);
       }
     }
 
