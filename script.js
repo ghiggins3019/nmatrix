@@ -14,7 +14,11 @@ const columnPositions = Array(columns).fill(0);
 // Function to draw the matrix effect
 function drawMatrix() {
     // Set a black background
-    ctx.fillStyle = 'rgba(25, 25, 25, 0.05)';
+    ctx.fillStyle = 'rgba(25, 25, 25, 0.05)'; // For fade effect
+    // BUT first clear fully with:
+    ctx.fillStyle = '#191919'; // solid dark gray base
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'rgba(25, 25, 25, 0.05)'; // then fade layer
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Set the text color to green
