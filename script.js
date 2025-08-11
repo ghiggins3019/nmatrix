@@ -18,7 +18,7 @@ function drawMatrix() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Set the text color to green
-    ctx.fillStyle = '#00ff00';
+    ctx.fillStyle = '#6ac954';
     ctx.font = '15px monospace';
 
     // Iterate over each column
@@ -42,7 +42,7 @@ function drawMatrix() {
 // Function to continuously update and render the animation
 function animate() {
     drawMatrix();
-    setTimeout(animate, 30); // Adjust the delay (in milliseconds) for desired speed
+    setTimeout(animate, 40); // Adjust the delay (in milliseconds) for desired speed
 }
 
 // Start the animation
