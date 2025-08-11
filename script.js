@@ -11,15 +11,21 @@ const matrix = 'abcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()*&^%+-/~{[|`]}'; //
 // Create an array of column positions
 const columnPositions = Array(columns).fill(0);
 
+// Flag to know if it's the first frame
+let firstFrame = true;
+
 // Function to draw the matrix effect
 function drawMatrix() {
-    // Set a black background
-    ctx.fillStyle = 'rgba(25, 25, 25, 0.05)'; // For fade effect
-    // BUT first clear fully with:
-    ctx.fillStyle = '#191919'; // solid dark gray base
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'rgba(25, 25, 25, 0.05)'; // then fade layer
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    if (firstFrame) {
+        // Solid dark gray background for the first frame
+        ctx.fillStyle = '#191919';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        firstFrame = false;
+    } else {
+        // Semi-transparent dark gray overlay for fade effect
+        ctx.fillStyle = 'rgba(25, 25, 25, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 
     // Set the text color to green
     ctx.fillStyle = '#6ac954';
@@ -51,4 +57,3 @@ function animate() {
 
 // Start the animation
 animate();
-
