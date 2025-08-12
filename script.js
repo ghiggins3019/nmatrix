@@ -8,8 +8,8 @@ canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 
 // Color variables for easy changes
-const normalGreen = '#6ac954';
-const lightGreen = '#b6ffb0';
+const normalGreen = '#04796a';
+const lightGreen = '#0d9180';
 
 const maxColumns = 20;
 const matrix = 'abcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()*&^%+-/~{[|]}';
