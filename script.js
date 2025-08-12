@@ -9,7 +9,7 @@ canvas.height = canvasHeight;
 
 // Color variables for easy changes
 const normalGreen = '#04796a';
-const lightGreen = '#0d9180';
+const lightGreen = '#1ba18f';
 
 const maxColumns = 20;
 const matrix = 'abcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()*&^%+-/~{[|]}';
